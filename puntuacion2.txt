@@ -1,0 +1,26 @@
+{
+    "Dani": {
+        "Partidas": 16,
+        "Victorias": 8,
+        "Derrotas": 3,
+        "Empates": 5
+    },
+    "Miguel": {
+        "Partidas": 1,
+        "Victorias": 0,
+        "Derrotas": 1,
+        "Empates": 0
+    },
+    "isabel": {
+        "Partidas": 5,
+        "Victorias": 3,
+        "Derrotas": 1,
+        "Empates": 1
+    },
+    "Pinga": {
+        "Partidas": 3,
+        "Victorias": 2,
+        "Derrotas": 1,
+        "Empates": 0
+    }
+}
