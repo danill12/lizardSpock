@@ -1,8 +1,9 @@
 # Piedra, papel, tijera, lagarto o spock
-# Este es un juego interactivo que mejora el anterior programa de piedra papel y tijera
+
 import random
 import json
 import os
+import time
 from mensajes import msg
 
 SAVEFILE = "puntuacion2.txt"
@@ -24,6 +25,7 @@ def jugador():
 
 
 def inicio():
+    tiempoInicio()
     usuario = input("Escriba su elección: Piedra(R), Papel(P), Tijeras(S), Lagarto(L) o Spock(K): ")
     while usuario != "R" and usuario != "P" and usuario != "S" and \
             usuario != "E" and usuario != "L" and usuario != "K" and usuario != "RQ":
@@ -40,6 +42,7 @@ def juego(usuario, punt):
     win = [["R", "S"], ["R", "L"], ["P", "R"], ["P", "K"], ["S", "P"], ["S", "L"], ["L", "K"], ["L", "P"], ["K", "S"], ["K", "R"]]
 
     if usuario == "E":
+        tiempoEjecucion()
         if SAVE_ON_EXIT:
             guardar(punt)
         print(msg["mensajeSalida"])
@@ -97,7 +100,7 @@ def newPun():
     }
 
 
-def diccionario():
+def diccionario_puntos():
     if os.path.isfile(SAVEFILE):
         with open(SAVEFILE) as json_file:
             punt = json.load(json_file)
@@ -106,6 +109,29 @@ def diccionario():
         punt = {
         }
         return punt
+
+
+def diccionario_stats():
+
+    if os.path.isfile(SAVEFILE):
+        with open(SAVEFILE) as json_file:
+            punt = json.load(json_file)
+            return stats
+    else:
+        stats = {
+            "tiempo_ejec": elapsedTime,
+            "total_imput": ,
+            "buenas_imput": ,
+        }
+        return stats
+
+
+def tiempoInicio():
+    startTime = time.time()
+
+
+def tiempoEjecucion():
+    elapsedTime = time.time() - startTime()
 
 
 def puntuacion(puntos, punt, plyr):
@@ -129,9 +155,11 @@ def puntuacion(puntos, punt, plyr):
     print(msg["linea"])
 
 
-def guardar(punt):
+def guardar(punt, stats):
     with open(SAVEFILE, "w") as outfile:
         json.dump(punt, outfile, indent=4)
+    with open(SAVEFILE, "w") as outfile:
+        json.dump(stats, outfile, indent=4)
 
 
 def ranking(usuario, punt):
@@ -146,7 +174,8 @@ def ranking(usuario, punt):
 def main():
     print(msg["inicio"])
     global punt
-    punt = diccionario()
+    punt = diccionario_puntos()
+    stats = diccionario_stats()
     plyr = jugador()
     while True:
         usuario = inicio()
