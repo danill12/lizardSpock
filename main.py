@@ -1,5 +1,5 @@
 # Piedra, papel, tijera, lagarto o spock
-# Este es un juego interactivo
+# Este es un juego interactivo que mejora el anterior programa de piedra papel y tijera
 import random
 import json
 import os
