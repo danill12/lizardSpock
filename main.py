@@ -11,8 +11,18 @@ SAVE_ON_EXIT = True
 SAVE_ON_CYCLE = True
 
 punt = None
+
+moves = ["R", "P", "S", "L", "K"]
+control = ["E", "RQ"]
+
 contBuenas = 0
 contTotal = 0
+
+stats = {
+            "tiempo_ejec": 0,
+            "total_imput": 0,
+            "buenas_imput": 0,
+        }
 
 
 def jugador():
@@ -26,27 +36,30 @@ def jugador():
     return plyr
 
 
-def inicio():
+def inicio(moves, control):
     tiempoInicio()
-    usuario = input("Escriba su elección: Piedra(R), Papel(P), Tijeras(S), Lagarto(L) o Spock(K): ")
-    while usuario != "R" and usuario != "P" and usuario != "S" and \
-            usuario != "E" and usuario != "L" and usuario != "K" and usuario != "RQ":
-        contadorInput()
+    usuario = introducir()
+    while usuario not in moves + control:
+        contadorInput(stats)
         print(msg["error"])
         print(msg["exit"])
-        usuario = input("Escriba su elección: Piedra(R), Papel(P),\
- Tijeras(S), Lagarto(L) o Spock(K): ")
-    contadorBuenas()
+        usuario = introducir()
+    contadorBuenas(stats)
     return usuario
 
 
-def juego(usuario, punt):
-    maquina = random.choice(["R", "P", "S", "L", "K"])
+def introducir():
+    elecc = input("Escriba su elección: Piedra(R), Papel(P), Tijeras(S), Lagarto(L) o Spock(K): ")
+    return elecc
+
+
+def juego(usuario, punt, startTime, moves, control):
+    maquina = random.choice(moves)
 
     win = [["R", "S"], ["R", "L"], ["P", "R"], ["P", "K"], ["S", "P"], ["S", "L"], ["L", "K"], ["L", "P"], ["K", "S"], ["K", "R"]]
 
-    if usuario == "E":
-        tiempoEjecucion()
+    if usuario in control:
+        tiempoEjecucion(startTime)
         if SAVE_ON_EXIT:
             guardar(punt)
         print(msg["mensajeSalida"])
@@ -119,7 +132,7 @@ def diccionario_stats():
 
     if os.path.isfile(SAVEFILE):
         with open(SAVEFILE) as json_file:
-            punt = json.load(json_file)
+            stats = json.load(json_file)
             return stats
     else:
         stats = {
@@ -132,19 +145,19 @@ def diccionario_stats():
 
 def tiempoInicio():
     startTime = time.time()
+    return startTime
 
 
-def tiempoEjecucion():
+def tiempoEjecucion(startTime):
     elapsedTime = time.time() - startTime()
+    return elapsedTime
 
 
 def contadorInput(stats):
-    contTotal = contTotal + 1
     stats["total_imput"] = stats["total_imput"] + 1
 
 
 def contadorBuenas(stats):
-    contBuenas = contBuenas + 1
     stats["buenas_imput"] = stats["buenas_imput"] + 1
 
 
@@ -172,6 +185,8 @@ def puntuacion(puntos, punt, plyr):
 def guardar(punt):
     with open(SAVEFILE, "w") as outfile:
         json.dump(punt, outfile, indent=4)
+    with open(SAVEFILE, "w") as outfile:
+        json.dump(stats, outfile, indent=4)
 
 
 def ranking(usuario, punt):
@@ -185,17 +200,16 @@ def ranking(usuario, punt):
 
 def main():
     print(msg["inicio"])
+    startTime = tiempoInicio()
     global punt
     punt = diccionario_puntos()
     stats = diccionario_stats()
-    contadorInput(stats)
-    contadorBuenas(stats)
     plyr = jugador()
     while True:
-        usuario = inicio()
+        usuario = inicio(moves, control)
         if usuario == "RQ":
             ranking(usuario, punt)
-        puntos = juego(usuario, punt)
+        puntos = juego(usuario, punt, startTime, moves, control)
         puntuacion(puntos, punt, plyr)
         if SAVE_ON_CYCLE:
             guardar(punt)
