@@ -10,25 +10,20 @@ SAVEFILE = "puntuacion2.txt"
 SAVE_ON_EXIT = True
 SAVE_ON_CYCLE = True
 
-punt = None
-
 moves = ["R", "P", "S", "L", "K"]
 control = ["E", "RQ"]
 
 contBuenas = 0
 contTotal = 0
 
-stats = {
-            "tiempo_ejec": 0,
-            "total_imput": 0,
-            "buenas_imput": 0,
-        }
+
+gameStatus = None
 
 
-def jugador():
+def jugador(gameStatus):
     plyr = input("Introduzca su nombre: ")
-    if plyr not in punt:
-        punt[plyr] = newPun()
+    if plyr not in gameStatus["punt"]:
+        gameStatus["punt"][plyr] = newPun()
         print(msg["crear"])
     else:
         print(msg["cargar"])
@@ -38,13 +33,14 @@ def jugador():
 
 def inicio(moves, control):
     tiempoInicio()
+    contadorInput(gameStatus)
     usuario = introducir()
     while usuario not in moves + control:
-        contadorInput(stats)
         print(msg["error"])
         print(msg["exit"])
+        contadorInput(gameStatus)
         usuario = introducir()
-    contadorBuenas(stats)
+    contadorBuenas(gameStatus)
     return usuario
 
 
@@ -117,30 +113,23 @@ def newPun():
     }
 
 
-def diccionario_puntos():
+def diccionario():
     if os.path.isfile(SAVEFILE):
         with open(SAVEFILE) as json_file:
-            punt = json.load(json_file)
-            return punt
+            gameStatus = json.load(json_file)
+            return gameStatus
     else:
-        punt = {
+        gameStatus = {
+            "punt": {
+
+            },
+            "stats": {
+                "tiempo_ejec": 0,
+                "total_imput": 0,
+                "buenas_imput": 0,
+            }
         }
-        return punt
-
-
-def diccionario_stats():
-
-    if os.path.isfile(SAVEFILE):
-        with open(SAVEFILE) as json_file:
-            stats = json.load(json_file)
-            return stats
-    else:
-        stats = {
-            "tiempo_ejec": 0,
-            "total_imput": 0,
-            "buenas_imput": 0,
-        }
-        return stats
+        return gameStatus
 
 
 def tiempoInicio():
@@ -151,52 +140,50 @@ def tiempoInicio():
 def tiempoEjecucion(startTime):
     elapsedTime = time.time() - startTime
     gmTime = time.gmtime(elapsedTime)
-    stats["tiempo_ejec"] = gmTime
-    print(time.strftime("%H:%M:%S", gmTime))
-    return elapsedTime
+    gameStatus["stats"]["tiempo_ejec"] = gmTime
+    slapsedStr = time.strftime("%H:%M:%S", gmTime)
+    return gmTime
 
 
-def contadorInput(stats):
-    stats["total_imput"] = stats["total_imput"] + 1
+def contadorInput(gameStatus):
+    gameStatus["stats"]["total_imput"] = gameStatus["stats"]["total_imput"] + 1
 
 
-def contadorBuenas(stats):
-    stats["buenas_imput"] = stats["buenas_imput"] + 1
+def contadorBuenas(gameStatus):
+    gameStatus["stats"]["buenas_imput"] = gameStatus["stats"]["buenas_imput"] + 1
 
 
-def puntuacion(puntos, punt, plyr):
-    punt[plyr]["Partidas"] = punt[plyr]["Partidas"] + 1
+def puntuacion(puntos, gameStatus, plyr):
+    gameStatus["punt"][plyr]["Partidas"] = gameStatus["punt"][plyr]["Partidas"] + 1
 
     if puntos == 0:
-        punt[plyr]["Empates"] = punt[plyr]["Empates"] + 1
+        gameStatus["punt"][plyr]["Empates"] = gameStatus["punt"][plyr]["Empates"] + 1
     elif puntos == 1:
-        punt[plyr]["Derrotas"] = punt[plyr]["Derrotas"] + 1
+        gameStatus["punt"][plyr]["Derrotas"] = gameStatus["punt"][plyr]["Derrotas"] + 1
     else:
-        punt[plyr]["Victorias"] = punt[plyr]["Victorias"] + 1
+        gameStatus["punt"][plyr]["Victorias"] = gameStatus["punt"][plyr]["Victorias"] + 1
 
     # print(json.dumps(punt, indent=4))
     print(msg["jugador"].format(**{"plyr": plyr}))
 
-    print(msg["contador"]["Partidas"].format(**punt[plyr]))
-    print(msg["contador"]["Victorias"].format(**punt[plyr]))
-    print(msg["contador"]["Derrotas"].format(**punt[plyr]))
-    print(msg["contador"]["Empates"].format(**punt[plyr]))
+    print(msg["contador"]["Partidas"].format(**gameStatus["punt"][plyr]))
+    print(msg["contador"]["Victorias"].format(**gameStatus["punt"][plyr]))
+    print(msg["contador"]["Derrotas"].format(**gameStatus["punt"][plyr]))
+    print(msg["contador"]["Empates"].format(**gameStatus["punt"][plyr]))
     print(msg["exit"])
     print(msg["linea"])
 
 
-def guardar(punt):
+def guardar(gameStatus):
     with open(SAVEFILE, "w") as outfile:
-        json.dump(punt, outfile, indent=4)
-    with open(SAVEFILE, "w") as outfile:
-        json.dump(stats, outfile, indent=4)
+        json.dump(gameStatus, outfile, indent=4)
 
 
-def ranking(usuario, punt):
+def ranking(usuario, gameStatus):
     for n in punt:
         m = n + 1
-        if punt[n]["Victorias"] > punt[m]["Victorias"]:
-            print(punt[n])
+        if gameStatus["punt"][n]["Victorias"] > gameStatus["punt"][m]["Victorias"]:
+            print(gameStatus["punt"][n])
         else:
             n = n + 1
 
@@ -204,18 +191,17 @@ def ranking(usuario, punt):
 def main():
     print(msg["inicio"])
     startTime = tiempoInicio()
-    global punt
-    punt = diccionario_puntos()
-    stats = diccionario_stats()
-    plyr = jugador()
+    global gameStatus
+    gameStatus = diccionario()
+    plyr = jugador(gameStatus)
     while True:
         usuario = inicio(moves, control)
         if usuario == "RQ":
-            ranking(usuario, punt)
-        puntos = juego(usuario, punt, startTime, moves, control)
-        puntuacion(puntos, punt, plyr)
+            ranking(usuario, gameStatus)
+        puntos = juego(usuario, gameStatus, startTime, moves, control)
+        puntuacion(puntos, gameStatus, plyr)
         if SAVE_ON_CYCLE:
-            guardar(punt)
+            guardar(gameStatus)
 
 
 main()
