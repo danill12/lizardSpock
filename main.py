@@ -33,23 +33,22 @@ def jugador(gameStatus):
 
 def inicio(moves, control):
     tiempoInicio()
-    contadorInput(gameStatus)
     usuario = introducir()
     while usuario not in moves + control:
         print(msg["error"])
         print(msg["exit"])
-        contadorInput(gameStatus)
         usuario = introducir()
     contadorBuenas(gameStatus)
     return usuario
 
 
 def introducir():
-    elecc = input("Escriba su elección: Piedra(R), Papel(P), Tijeras(S), Lagarto(L) o Spock(K): ")
+    elecc = input(msg["input"])
+    contadorInput(gameStatus)
     return elecc
 
 
-def juego(usuario, punt, startTime, moves, control):
+def juego(usuario, gameStatus, startTime, moves, control):
     maquina = random.choice(moves)
 
     win = [["R", "S"], ["R", "L"], ["P", "R"], ["P", "K"], ["S", "P"], ["S", "L"], ["L", "K"], ["L", "P"], ["K", "S"], ["K", "R"]]
@@ -57,8 +56,9 @@ def juego(usuario, punt, startTime, moves, control):
     if usuario in control:
         tiempoEjecucion(startTime)
         if SAVE_ON_EXIT:
-            guardar(punt)
+            guardar(gameStatus)
         print(msg["mensajeSalida"])
+        imprimir(gameStatus)
         exit()
 
     if maquina == "R":
@@ -140,8 +140,8 @@ def tiempoInicio():
 def tiempoEjecucion(startTime):
     elapsedTime = time.time() - startTime
     gmTime = time.gmtime(elapsedTime)
-    gameStatus["stats"]["tiempo_ejec"] = gmTime
     slapsedStr = time.strftime("%H:%M:%S", gmTime)
+    gameStatus["stats"]["tiempo_ejec"] = gmTime
     return gmTime
 
 
@@ -166,10 +166,8 @@ def puntuacion(puntos, gameStatus, plyr):
     # print(json.dumps(punt, indent=4))
     print(msg["jugador"].format(**{"plyr": plyr}))
 
-    print(msg["contador"]["Partidas"].format(**gameStatus["punt"][plyr]))
-    print(msg["contador"]["Victorias"].format(**gameStatus["punt"][plyr]))
-    print(msg["contador"]["Derrotas"].format(**gameStatus["punt"][plyr]))
-    print(msg["contador"]["Empates"].format(**gameStatus["punt"][plyr]))
+    print(msg["contador"].format(**gameStatus["punt"][plyr]))
+
     print(msg["exit"])
     print(msg["linea"])
 
@@ -177,6 +175,11 @@ def puntuacion(puntos, gameStatus, plyr):
 def guardar(gameStatus):
     with open(SAVEFILE, "w") as outfile:
         json.dump(gameStatus, outfile, indent=4)
+
+
+def imprimir(gameStatus):
+
+    print(msg["stats"].format(**gameStatus["stats"]))
 
 
 def ranking(usuario, gameStatus):

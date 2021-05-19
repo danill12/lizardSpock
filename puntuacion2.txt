@@ -1,10 +1,22 @@
 {
     "punt": {
         "Dani": {
+            "Partidas": 33,
+            "Victorias": 10,
+            "Derrotas": 13,
+            "Empates": 10
+        },
+        "Pingos": {
             "Partidas": 3,
             "Victorias": 0,
-            "Derrotas": 2,
-            "Empates": 1
+            "Derrotas": 1,
+            "Empates": 2
+        },
+        "Daniel": {
+            "Partidas": 2,
+            "Victorias": 1,
+            "Derrotas": 1,
+            "Empates": 0
         }
     },
     "stats": {
@@ -14,12 +26,12 @@
             1,
             0,
             0,
-            7,
+            5,
             3,
             1,
             0
         ],
-        "total_imput": 4,
-        "buenas_imput": 4
+        "total_imput": 67,
+        "buenas_imput": 57
     }
 }
