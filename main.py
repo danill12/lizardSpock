@@ -32,7 +32,6 @@ def jugador(gameStatus):
 
 
 def inicio(moves, control):
-    tiempoInicio()
     usuario = introducir()
     while usuario not in moves + control:
         print(msg["error"])
@@ -54,7 +53,7 @@ def juego(usuario, gameStatus, startTime, moves, control):
     win = [["R", "S"], ["R", "L"], ["P", "R"], ["P", "K"], ["S", "P"], ["S", "L"], ["L", "K"], ["L", "P"], ["K", "S"], ["K", "R"]]
 
     if usuario in control:
-        tiempoEjecucion(startTime)
+        gameStatus = contadorTiempo(gameStatus, startTime)
         if SAVE_ON_EXIT:
             guardar(gameStatus)
         print(msg["mensajeSalida"])
@@ -124,7 +123,7 @@ def diccionario():
 
             },
             "stats": {
-                "tiempo_ejec": 0,
+                "tiempo_ejec": 0.0,
                 "total_imput": 0,
                 "buenas_imput": 0,
             }
@@ -139,10 +138,19 @@ def tiempoInicio():
 
 def tiempoEjecucion(startTime):
     elapsedTime = time.time() - startTime
+    # gmTime = time.gmtime(elapsedTime)
+    return elapsedTime
+
+
+def contadorTiempo(gameStatus, startTime):
+    gameStatus["stats"]["tiempo_ejec"] = gameStatus["stats"]["tiempo_ejec"] + tiempoEjecucion(startTime)
+    return gameStatus
+
+
+def convertidorTiempo(elapsedTime):
     gmTime = time.gmtime(elapsedTime)
     slapsedStr = time.strftime("%H:%M:%S", gmTime)
-    gameStatus["stats"]["tiempo_ejec"] = gmTime
-    return gmTime
+    return slapsedStr
 
 
 def contadorInput(gameStatus):
@@ -179,6 +187,9 @@ def guardar(gameStatus):
 
 def imprimir(gameStatus):
 
+    tiempoConvertido = convertidorTiempo(gameStatus["stats"]["tiempo_ejec"])
+    print(msg["tiempo"].format(**{"tiempoConvertido": tiempoConvertido}))
+
     print(msg["stats"].format(**gameStatus["stats"]))
 
 
@@ -192,8 +203,8 @@ def ranking(usuario, gameStatus):
 
 
 def main():
-    print(msg["inicio"])
     startTime = tiempoInicio()
+    print(msg["inicio"])
     global gameStatus
     gameStatus = diccionario()
     plyr = jugador(gameStatus)

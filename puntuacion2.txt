@@ -1,18 +1,12 @@
 {
     "punt": {
         "Dani": {
-            "Partidas": 33,
-            "Victorias": 10,
-            "Derrotas": 13,
-            "Empates": 10
-        },
-        "Pingos": {
-            "Partidas": 3,
-            "Victorias": 0,
-            "Derrotas": 1,
+            "Partidas": 8,
+            "Victorias": 2,
+            "Derrotas": 4,
             "Empates": 2
         },
-        "Daniel": {
+        "S": {
             "Partidas": 2,
             "Victorias": 1,
             "Derrotas": 1,
@@ -20,18 +14,8 @@
         }
     },
     "stats": {
-        "tiempo_ejec": [
-            1970,
-            1,
-            1,
-            0,
-            0,
-            5,
-            3,
-            1,
-            0
-        ],
-        "total_imput": 67,
-        "buenas_imput": 57
+        "tiempo_ejec": 23.218183517456055,
+        "total_imput": 15,
+        "buenas_imput": 14
     }
 }
