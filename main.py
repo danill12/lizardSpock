@@ -149,7 +149,10 @@ def tiempoInicio():
 
 
 def tiempoEjecucion(startTime):
-    elapsedTime = time.time() - startTime()
+    elapsedTime = time.time() - startTime
+    gmTime = time.gmtime(elapsedTime)
+    stats["tiempo_ejec"] = gmTime
+    print(time.strftime("%H:%M:%S", gmTime))
     return elapsedTime
 
 
