@@ -1,7 +1,7 @@
 msg = {
     "inicio": "\nBienvenido al juego de Piedra papel, tijera, lagarto o spock\n\n",
     "input": "Escriba su elección: Piedra(R), Papel(P), Tijeras(S), Lagarto(L) o Spock(K): ",
-    "error": "Introduzca una letra valida\n",
+    "error": " ERROR  Introduzca una letra valida\n",
     "exit": "\nPara salir del juego introduzca Exit(E)\n",
     "linea": "------------------------------------------------------------------------------\n",
     "jugador": "\n{plyr}:",

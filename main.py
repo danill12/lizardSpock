@@ -58,8 +58,8 @@ def juego(usuario, gameStatus, startTime, moves, control):
     win = [["R", "S"], ["R", "L"], ["P", "R"], ["P", "K"], ["S", "P"], ["S", "L"], ["L", "K"], ["L", "P"], ["K", "S"], ["K", "R"]]
     winM = [["r", "s"], ["r", "l"], ["p", "r"], ["p", "k"], ["s", "p"], ["s", "l"], ["l", "k"], ["l", "p"], ["k", "s"], ["k", "r"]]
 
-    # sistema de salida del juego con la tecla "E"
-    if usuario in control:
+    # sistema de salida del juego con la tecla "E" o "e"
+    if usuario in control or usuario in controlM:
         # llama a la funcion contadorTiempo para obtener el timpo de juego
         gameStatus = contadorTiempo(gameStatus, startTime)
         if SAVE_ON_EXIT:
@@ -70,48 +70,26 @@ def juego(usuario, gameStatus, startTime, moves, control):
 
     # mejora de interfaz al indicar la eleccion de la maquina y la jugada
 
-    opcionesMovimientos: {
+    opcionesMovimientos = {
         "R": msg["moveR"],
         "P": msg["moveP"],
         "S": msg["moveS"],
         "L": msg["moveL"],
-        "K": msg["moveK"]
+        "K": msg["moveK"],
+
+        "r": msg["moveR"],
+        "p": msg["moveP"],
+        "s": msg["moveS"],
+        "l": msg["moveL"],
+        "k": msg["moveK"]
     }
-
-    eleccionUsuario = opcionesMovimientos[usuario]
-    eleccionMaquina = opcionesMovimientos[maquina]
-
-    print(msg["mensajeMaquina"].format(**{"eleccionMaquina": eleccionMaquina}))
-
-    """
-    if maquina == "R":
-        eleccionMaquina = "Piedra"
-    elif maquina == "P":
-        eleccionMaquina = "Papel"
-    elif maquina == "S":
-        eleccionMaquina = "Tijeras"
-    elif maquina == "L":
-        eleccionMaquina = "Lagarto"
-    elif maquina == "K":
-        eleccionMaquina = "Spock"
-
-    if usuario == "R":
-        eleccionUsuario = "Piedra"
-    elif usuario == "P":
-        eleccionUsuario = "Papel"
-    elif usuario == "S":
-        eleccionUsuario = "Tijeras"
-    elif usuario == "L":
-        eleccionUsuario = "Lagarto"
-    elif usuario == "K":
-        eleccionUsuario = "Spock"
 
     eleccion = {
-        "eleccionUsuario": usuario,
-        "eleccionMaquina": maquina
+        "eleccionUsuario": opcionesMovimientos[usuario],
+        "eleccionMaquina": opcionesMovimientos[maquina]
     }
 
-    """
+    print(msg["mensajeMaquina"].format(**eleccion))
 
     # logica del juego
     if usuario == maquina:
