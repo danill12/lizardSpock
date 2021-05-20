@@ -2,20 +2,14 @@
     "punt": {
         "Dani": {
             "Partidas": 8,
-            "Victorias": 2,
+            "Victorias": 3,
             "Derrotas": 4,
-            "Empates": 2
-        },
-        "S": {
-            "Partidas": 2,
-            "Victorias": 1,
-            "Derrotas": 1,
-            "Empates": 0
+            "Empates": 1
         }
     },
     "stats": {
-        "tiempo_ejec": 23.218183517456055,
-        "total_imput": 15,
-        "buenas_imput": 14
+        "tiempo_ejec": 23.735761642456055,
+        "total_imput": 13,
+        "buenas_imput": 12
     }
 }
